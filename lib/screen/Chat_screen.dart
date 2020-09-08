@@ -15,11 +15,7 @@ class ChatScreen extends StatelessWidget {
           onPressed: () {
             FirebaseFirestore.instance
                 .collection('/Chats/jmTvuPJxvAdOZkrSosJV/Messages')
-                .add({'Text': 'another message'});
-//            await Firebase.initializeApp();
-//              .listen((data) {
-//            print(data.docs[0].data()['Text']);
-//          });
+                .add({'Text': 'am good'});
           },
           child: Icon(Icons.add),
         ),
@@ -27,13 +23,14 @@ class ChatScreen extends StatelessWidget {
           stream: FirebaseFirestore.instance
               .collection('/Chats/jmTvuPJxvAdOZkrSosJV/Messages')
               .snapshots(),
-          builder: (BuildContext context, snap) {
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snap) {
             if (snap.connectionState == ConnectionState.waiting) {
               return Center(
                 child: CircularProgressIndicator(),
               );
             }
             final docs = snap.data.docs;
+            print(docs);
             return ListView.builder(
                 itemCount: docs.length,
                 itemBuilder: (BuildContext context, int index) => Container(
