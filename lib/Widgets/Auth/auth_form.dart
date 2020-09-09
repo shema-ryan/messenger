@@ -5,7 +5,8 @@ import 'package:flutter/services.dart';
 class AuthForm extends StatefulWidget {
   final void Function(String email, String password, String username,
       bool login, BuildContext context) submit;
-  AuthForm(this.submit);
+  final bool _isLoading;
+  AuthForm(this.submit, this._isLoading);
   @override
   _AuthFormState createState() => _AuthFormState();
 }
@@ -112,62 +113,64 @@ class _AuthFormState extends State<AuthForm> {
                   SizedBox(
                     height: 40,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            login = true;
-                          });
-                          if (login = true) {
-                            _trySubmit();
-                          }
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: 50,
-                          width: 140,
-                          child: Text(
-                            'Login',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            login = false;
-                          });
-                          if (login == false) {
-                            _trySubmit();
-                          }
-                        },
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: 50,
-                          width: 140,
-                          child: Text(
-                            'Sign Up',
-                            style: TextStyle(
-                                color: Theme.of(context).primaryColor),
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
+                  if (widget._isLoading) CircularProgressIndicator(),
+                  if (!widget._isLoading)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              login = true;
+                            });
+                            if (login = true) {
+                              _trySubmit();
+                            }
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            height: 50,
+                            width: 140,
+                            child: Text(
+                              'Login',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            decoration: BoxDecoration(
                               color: Theme.of(context).primaryColor,
-                              style: BorderStyle.solid,
-                              width: 3,
+                              borderRadius: BorderRadius.circular(10),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              login = false;
+                            });
+                            if (login == false) {
+                              _trySubmit();
+                            }
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            height: 50,
+                            width: 140,
+                            child: Text(
+                              'Sign Up',
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Theme.of(context).primaryColor,
+                                style: BorderStyle.solid,
+                                width: 3,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                 ],
               ),
             ),

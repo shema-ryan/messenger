@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
@@ -8,8 +9,37 @@ class ChatScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           elevation: 0.0,
-          centerTitle: true,
           title: Text('Messenger'),
+          actions: [
+            DropdownButton(
+                icon: Icon(
+                  Icons.more_vert,
+                  color: Colors.white,
+                ),
+                items: [
+                  DropdownMenuItem(
+                    value: 'Log out',
+                    child: Container(
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.exit_to_app,
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text('Log Out'),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+                onChanged: (value) {
+                  if (value == 'Log out') {
+                    FirebaseAuth.instance.signOut();
+                  }
+                })
+          ],
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {

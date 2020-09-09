@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../Widgets/Auth/auth_form.dart';
@@ -9,20 +10,36 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  final _auth = FirebaseAuth.instance;
+  bool isLoading = false;
   void _submit(String email, String password, String userName, bool log,
       BuildContext ctx) async {
-    final _auth = FirebaseAuth.instance;
     UserCredential _userCredential;
     try {
       if (log == true) {
+        setState(() {
+          isLoading = true;
+        });
         _userCredential = await _auth.signInWithEmailAndPassword(
             email: email, password: password);
-        print(_userCredential);
       } else {
+        setState(() {
+          isLoading = true;
+        });
         _userCredential = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
+        FirebaseFirestore.instance
+            .collection('Users')
+            .doc(_userCredential.user.uid)
+            .set({
+          'username': userName,
+          'Email': email,
+        });
       }
     } on PlatformException catch (error) {
+      setState(() {
+        isLoading = false;
+      });
       var message = 'an Error occurred please check your credentials';
       if (error.message != null) {
         message = error.message;
@@ -32,6 +49,9 @@ class _AuthScreenState extends State<AuthScreen> {
         ));
       }
     } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
       Scaffold.of(ctx).showSnackBar(SnackBar(
         content: Text(error.message),
       ));
@@ -58,7 +78,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       'https://cdn.shopify.com/s/files/1/0027/8645/9757/products/Cloud2021_1800x1800.jpg',
                     ))),
           ),
-          AuthForm(_submit),
+          AuthForm(_submit, isLoading),
         ],
       ),
     );
