@@ -1,73 +1,55 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
+import 'package:messenger/Widgets/Messages/message.dart';
+import 'package:messenger/Widgets/Messages/textfield_message.dart';
 
 class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0.0,
-          title: Text('Messenger'),
-          actions: [
-            DropdownButton(
-                icon: Icon(
-                  Icons.more_vert,
-                  color: Colors.white,
-                ),
-                items: [
-                  DropdownMenuItem(
-                    value: 'Log out',
-                    child: Container(
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.exit_to_app,
-                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text('Log Out'),
-                        ],
-                      ),
+      appBar: AppBar(
+        elevation: 0.0,
+        title: Text('Messenger'),
+        actions: [
+          PopupMenuButton(
+            tooltip: 'logging out ',
+            onSelected: (value) {
+              if (value == 'logout') {
+                FirebaseAuth.instance.signOut();
+              }
+            },
+            icon: Icon(Icons.more_vert),
+            itemBuilder: (BuildContext context) => [
+              PopupMenuItem(
+                value: 'logout',
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.logout,
+                      color: Colors.black,
                     ),
-                  )
-                ],
-                onChanged: (value) {
-                  if (value == 'Log out') {
-                    FirebaseAuth.instance.signOut();
-                  }
-                })
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Text('Log Out'),
+                  ],
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+      body: Container(
+        child: Column(
+          children: [
+            Expanded(
+              child: Message(),
+            ),
+            TextFieldMessage(),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            FirebaseFirestore.instance
-                .collection('/Chats/jmTvuPJxvAdOZkrSosJV/Messages')
-                .add({'Text': 'am good'});
-          },
-          child: Icon(Icons.add),
-        ),
-        body: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('/Chats/jmTvuPJxvAdOZkrSosJV/Messages')
-              .snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<dynamic> snap) {
-            if (snap.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            final docs = snap.data.docs;
-            print(docs);
-            return ListView.builder(
-                itemCount: docs.length,
-                itemBuilder: (BuildContext context, int index) => Container(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(docs[index].data()['Text']),
-                    ));
-          },
-        ));
+      ),
+    );
   }
 }
