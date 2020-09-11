@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:messenger/Widgets/Messages/messageWidget.dart';
+import 'dart:math';
 
 class Message extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final User user = FirebaseAuth.instance.currentUser;
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('/Chat')
@@ -18,10 +21,15 @@ class Message extends StatelessWidget {
         }
         final docs = snap.data.docs;
         return ListView.builder(
-            reverse: true,
-            itemCount: docs.length,
-            itemBuilder: (BuildContext context, int index) =>
-                MessageWidget(docs[index].data()['text']));
+          reverse: true,
+          itemCount: docs.length,
+          itemBuilder: (BuildContext context, int index) => MessageWidget(
+            docs[index].data()['text'],
+            docs[index].data()['userId'] == user.uid,
+            docs[index].data()['userName'],
+            key: ValueKey(Random().nextInt(5).toString()),
+          ),
+        );
       },
     );
   }

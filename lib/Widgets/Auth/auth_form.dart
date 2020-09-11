@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:messenger/Widgets/Picker/user_image_picker.dart';
+import 'dart:io';
 
 class AuthForm extends StatefulWidget {
   final void Function(String email, String password, String username,
-      bool login, BuildContext context) submit;
+      File image, bool login, BuildContext context) submit;
   final bool _isLoading;
   AuthForm(this.submit, this._isLoading);
   @override
@@ -19,15 +21,27 @@ class _AuthFormState extends State<AuthForm> {
   String _userEmail = '';
   String _userName = '';
   String _userPassword = '';
+  File imageToStore;
 
   // Helper functions
+  void _imageTobeStored(File image) {
+    imageToStore = image;
+  }
+
   void _trySubmit() {
     final bool valBool = scaffoldKey.currentState.validate();
     FocusScope.of(context).unfocus();
+    if (imageToStore == null && login == false) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text('Please select an image'),
+        backgroundColor: Theme.of(context).errorColor,
+      ));
+      return null;
+    }
     if (valBool) {
       scaffoldKey.currentState.save();
       widget.submit(_userEmail.trim(), _userPassword.trim(), _userName.trim(),
-          login, context);
+          imageToStore, login, context);
     }
   }
 
@@ -45,6 +59,7 @@ class _AuthFormState extends State<AuthForm> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  if (!login) UserImagePicker(_imageTobeStored),
                   TextFormField(
                     key: ValueKey('userMail'),
                     onSaved: (value) {
@@ -56,7 +71,7 @@ class _AuthFormState extends State<AuthForm> {
                       }
                       return null;
                     },
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.black54),
                     cursorColor: Theme.of(context).primaryColor,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
@@ -76,7 +91,7 @@ class _AuthFormState extends State<AuthForm> {
                         }
                         return null;
                       },
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.black54),
                       cursorColor: Theme.of(context).primaryColor,
                       decoration: InputDecoration(
                         labelText: 'user name',
@@ -94,7 +109,7 @@ class _AuthFormState extends State<AuthForm> {
                       }
                       return null;
                     },
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.black54),
                     cursorColor: Theme.of(context).primaryColor,
                     obscureText: hidePassword,
                     decoration: InputDecoration(

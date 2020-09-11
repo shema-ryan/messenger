@@ -14,6 +14,12 @@
 	<string>messenger</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>Happy needs Access </string>
+    <key>NSCameraUsageDescription</key>
+    <string>Happy needs Access </string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Happy needs Access </string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>

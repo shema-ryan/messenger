@@ -9,11 +9,19 @@ class TextFieldMessage extends StatefulWidget {
 
 class _TextFieldMessageState extends State<TextFieldMessage> {
   // Helper functions
-  void _sendMessage() {
+  void _sendMessage() async {
     FocusScope.of(context).unfocus();
     final user = FirebaseAuth.instance.currentUser;
-    FirebaseFirestore.instance.collection('Chat').add(
-        {'text': message, 'createdAt': Timestamp.now(), 'userId': user.uid});
+    final userData = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(user.uid)
+        .get();
+    FirebaseFirestore.instance.collection('Chat').add({
+      'text': message,
+      'createdAt': Timestamp.now(),
+      'userId': user.uid,
+      'userName': userData.data()['username'],
+    });
     _controller.clear();
   }
 
