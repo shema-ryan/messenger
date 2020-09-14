@@ -21,6 +21,7 @@ class _TextFieldMessageState extends State<TextFieldMessage> {
       'createdAt': Timestamp.now(),
       'userId': user.uid,
       'userName': userData.data()['username'],
+      'image_url': userData.data()['image_url'],
     });
     _controller.clear();
   }

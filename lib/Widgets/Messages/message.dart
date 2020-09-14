@@ -27,6 +27,7 @@ class Message extends StatelessWidget {
             docs[index].data()['text'],
             docs[index].data()['userId'] == user.uid,
             docs[index].data()['userName'],
+            docs[index].data()['image_url'],
             key: ValueKey(Random().nextInt(5).toString()),
           ),
         );
