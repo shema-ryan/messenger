@@ -50,6 +50,9 @@ class MessageWidget extends StatelessWidget {
                   ],
                 ),
               ),
+              SizedBox(
+                height: !_isMe ? 90 : 20,
+              ),
               if (_isMe)
                 CircleAvatar(
                   backgroundImage: NetworkImage(_imageUrl),
@@ -59,8 +62,8 @@ class MessageWidget extends StatelessWidget {
         ),
         if (!_isMe)
           Positioned(
-            top: -20,
-            left: 130,
+            top: -10,
+            left: 140,
             child: CircleAvatar(
               backgroundImage: NetworkImage(_imageUrl),
             ),

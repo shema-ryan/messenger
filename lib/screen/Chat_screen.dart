@@ -3,8 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:messenger/Widgets/Messages/message.dart';
 import 'package:messenger/Widgets/Messages/textfield_message.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
+  @override
+  _ChatScreenState createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  @override
+  void initState() {
+    FirebaseMessaging()
+      ..requestNotificationPermissions()
+      ..configure(
+        onMessage: (msg) {
+          return;
+        },
+        onLaunch: (msg) {
+          return;
+        },
+        onResume: (msg) {
+          return;
+        },
+      );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
